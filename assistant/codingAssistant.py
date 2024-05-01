@@ -4,34 +4,35 @@ import os
 openai.api_key = os.getenv("OPENAI_API_KEY")
 scriptPath = os.path.dirname(os.path.abspath(__file__))
 
-supabaseBasePath = scriptPath + '/../src/app/'
+supabaseBasePath = scriptPath + '/../'
 
 files = [
-    'app.component.html',
-    'app.component.scss',
-    'app.component.ts',
-    'app.module.ts'
+    'assistant/codingAssistant.py',
     ]
 
-def get_completion(prompt, model="gpt-4-turbo-preview"):
+def get_completion(prompt, user_messages=[], assistant_messages=[], model="gpt-4-turbo-preview"):
     system = """
-    you are a helpful assistant, supporting a software developer in creating an app using the following tools:
-    - Angular
-    - rxjs
-    - angular material
-    - ngrx for state management
-    - ngx-translate for internationalization
+    you are a helpful assistant, supporting a software developer in creating an coding assistant script 
+    based on the OpenAI API.:
+    
 
-    The app is {{add your description here}}.
-
-    Your task is to generate typescript, html and scss code.
+    Your task is to generate python code.
     """
     
     messages = [
-        {"role": "system", "content": system},
-        {"role": "user", "content": prompt},
-        # {"role": "assistant", "content": firstAssistanPrompt}
+        {"role": "system", "content": system}
         ]
+    
+    if user_messages:
+        for message in user_messages:
+            messages.append({"role": "user", "content": message})
+    
+    if prompt:
+        messages.append({"role": "user", "content": prompt})
+
+    if assistant_messages:
+        for message in assistant_messages:
+            messages.append({"role": "assistant", "content": message})
     
     response = openai.ChatCompletion.create(
         model=model,
@@ -42,14 +43,27 @@ def get_completion(prompt, model="gpt-4-turbo-preview"):
 
 
 prompt = """
-I need a login page. Please start with an HTML template first and explain to me how I add it to the existing Angular framework.
-
-I will add relevant code as follows. If you are missing any code, please tell me and I will add it.
-
+I'm looking for advice on becoming a better Python developer.
 """
 
+user_messages = [
+    "How can I improve my Python skills?",
+    "What are some advanced Python topics I should learn?"
+]
+
+assistant_messages = [
+    "Practice coding daily and work on projects.",
+    "Consider learning about asynchronous programming, metaprogramming, and system design."
+]
+
 def load_code_files(files) -> str:
-    code = ''
+    
+    if not files:
+        return ""
+    
+    code = """
+    I will add relevant code as follows. If you are missing any code, please tell me and I will add it.
+    """
     for file in files:
         with open(supabaseBasePath + '/' + file, 'r') as f:
             code += f"""
