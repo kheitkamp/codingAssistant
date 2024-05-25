@@ -1,7 +1,8 @@
-import openai
+from openai import OpenAI
 import os
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key = api_key)
 scriptPath = os.path.dirname(os.path.abspath(__file__))
 
 supabaseBasePath = scriptPath + '/../'
@@ -10,7 +11,7 @@ files = [
     'assistant/codingAssistant.py',
     ]
 
-def get_completion(prompt, user_messages=[], assistant_messages=[], model="gpt-4-turbo-preview"):
+def get_completion(prompt, user_messages=[], assistant_messages=[], model="gpt-4o"):
     system = """
     you are a helpful assistant, supporting a software developer in creating an coding assistant script 
     based on the OpenAI API.:
@@ -24,8 +25,8 @@ def get_completion(prompt, user_messages=[], assistant_messages=[], model="gpt-4
         ]
     
     if user_messages:
-        for message in user_messages:
-            messages.append({"role": "user", "content": message})
+        for user_message in user_messages:
+            messages.append({"role": "user", "content": user_message})
     
     if prompt:
         messages.append({"role": "user", "content": prompt})
@@ -34,16 +35,17 @@ def get_completion(prompt, user_messages=[], assistant_messages=[], model="gpt-4
         for message in assistant_messages:
             messages.append({"role": "assistant", "content": message})
     
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=model,
         messages=messages,
         temperature=0, # this is the degree of randomness of the model's output
     )
-    return response.choices[0].message["content"]
+    return response.choices[0].message.content
 
 
 prompt = """
-I'm looking for advice on becoming a better Python developer.
+I would like to become a better python developer.
+
 """
 
 user_messages = [
