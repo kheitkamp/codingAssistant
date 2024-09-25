@@ -4,6 +4,7 @@ import os
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key = api_key)
 scriptPath = os.path.dirname(os.path.abspath(__file__))
+model = "01-mini"
 
 supabaseBasePath = scriptPath + '/../'
 
@@ -11,7 +12,7 @@ files = [
     'assistant/codingAssistant.py',
     ]
 
-def get_completion(prompt, user_messages=[], assistant_messages=[], model="gpt-4o"):
+def get_completion(prompt, user_messages=[], assistant_messages=[], model=model):
     system = """
     you are a helpful assistant, supporting a software developer in creating an coding assistant script 
     based on the OpenAI API.:
