@@ -60,6 +60,12 @@ assistant_messages = [
 ]
 
 def load_code_files(files) -> str:
+    """
+    Loads files from the project, to help the assistant's understanding of the project,
+    and returns them as a string.
+    Argument:
+    files: a list of file names, including their path from the repository root.
+    """
     
     if not files:
         return ""
