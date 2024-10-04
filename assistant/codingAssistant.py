@@ -14,7 +14,6 @@ model_quick_change = "01-mini" # for the 01-mini model
 # model_quick_change = "gpt-4-turbo" # for the gpt-4-turbo model
 # model_quick_change = "gpt-3.5-turbo" # for the gpt-3.5-turbo model
 
-supabaseBasePath = scriptPath + '/../'
 
 project_files = [
     'assistant/codingAssistant.py',
@@ -86,7 +85,7 @@ def load_code_files(files) -> str:
     I will add relevant code as follows. If you are missing any code, please tell me and I will add it.
     """
     for file in files:
-        with open(supabaseBasePath + '/' + file, 'r') as f:
+        with open(projectBasePath + '/' + file, 'r') as f:
             code += f"""
             ```
             {file}
