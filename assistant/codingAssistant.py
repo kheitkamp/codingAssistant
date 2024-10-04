@@ -1,12 +1,13 @@
+# assistant/codingAssistant.py
 from openai import OpenAI
 from modules.code_loader import load_code
 import os
 
-client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 scriptPath = os.path.dirname(os.path.abspath(__file__))
 projectBasePath = scriptPath + '/../'
-# For the purpose of this example, we are using the "01-mini" model.
-# You can use
+
+# Default model
 # model_quick_change = "gpt-4o" # for the gpt-4o model
 model_quick_change = "gpt-4o-mini" # for the gpt-4o-mini model
 # model_quick_change = "o1-preview" # for the o1-preview model
@@ -15,27 +16,25 @@ model_quick_change = "gpt-4o-mini" # for the gpt-4o-mini model
 # model_quick_change = "gpt-4-turbo" # for the gpt-4-turbo model
 # model_quick_change = "gpt-3.5-turbo" # for the gpt-3.5-turbo model
 
-
 project_files = [
     'assistant/codingAssistant.py',
 ]
 
-def get_completion(prompt, model="o1-mini", user_messages=None, assistant_messages=None):
+
+def get_completion(prompt, model=model_quick_change, user_messages=None, assistant_messages=None):
+    """Get completion from OpenAI API based on the provided prompt and messages."""
     if assistant_messages is None:
         assistant_messages = []
     if user_messages is None:
         user_messages = []
+
     system = """
     you are a helpful assistant, supporting a software developer in creating an coding assistant script
     based on the OpenAI API.:
-
-
     Your task is to generate python code.
     """
 
-    messages: list[dict[str, str]] = [
-        {"role": "system", "content": system}
-    ]
+    messages = [{"role": "system", "content": system}]
 
     if user_messages:
         for user_message in user_messages:
@@ -48,18 +47,21 @@ def get_completion(prompt, model="o1-mini", user_messages=None, assistant_messag
         for message in assistant_messages:
             messages.append({"role": "assistant", "content": message})
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0, # this is the degree of randomness of the model's output
-    )
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0,  # this is the degree of randomness of the model's output
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
 
 def main():
-    my_prompt = """
-    I would like to become a better python developer.
+    """Main function to run the coding assistant."""
+    my_prompt = "I would like to become a better python developer.\n"
 
-    """
     user_msgs = [
         "How can I improve my Python skills?",
         "What are some advanced Python topics I should learn?"
@@ -76,7 +78,10 @@ def main():
 
     print('----------------\n--- response ---\n----------------\n\n\n')
 
-    print(get_completion(my_prompt))
+    response = get_completion(my_prompt, model=model_quick_change, user_messages=user_msgs,
+                              assistant_messages=assistant_msgs)
+    print(response)
+
 
 if __name__ == "__main__":
     main()
