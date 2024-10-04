@@ -3,7 +3,16 @@ import os
 
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 scriptPath = os.path.dirname(os.path.abspath(__file__))
-model_quick_change = "01-mini"
+projectBasePath = scriptPath + '/../'
+# For the purpose of this example, we are using the "01-mini" model.
+# You can use
+# model_quick_change = "gpt-4o" # for the gpt-4o model
+# model_quick_change = "gpt-4o-mini" # for the gpt-4o-mini model
+# model_quick_change = "01-preview" # for the 01-preview model
+model_quick_change = "01-mini" # for the 01-mini model
+# model_quick_change = "gpt-4" # for the gpt-4 model
+# model_quick_change = "gpt-4-turbo" # for the gpt-4-turbo model
+# model_quick_change = "gpt-3.5-turbo" # for the gpt-3.5-turbo model
 
 supabaseBasePath = scriptPath + '/../'
 
