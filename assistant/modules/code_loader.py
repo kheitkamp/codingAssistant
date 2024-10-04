@@ -8,18 +8,12 @@ def load_code(files, project_base_path) -> str:
     files: a list of file names, including their path from the repository root.
     """
 
-    if not files:
-        return ""
-
-    code = """
-    I will add relevant code as follows. If you are missing any code, please tell me and I will add it.
-    """
+    code_snippets = ""
     for file in files:
-        with open(os.path.join(project_base_path, file), 'r') as f:
-            code += f"""
-            ```
-            {file}
-            {f.read()}
-            ```
-            """
-    return code
+        file_path = os.path.join(project_base_path, file)
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as f:
+                code_snippets += f.read() + "\n\n"
+        else:
+            code_snippets += f"File {file} not found.\n\n"
+    return code_snippets
