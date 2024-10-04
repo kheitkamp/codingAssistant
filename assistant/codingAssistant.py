@@ -18,6 +18,7 @@ model_quick_change = "gpt-4o-mini" # for the gpt-4o-mini model
 
 project_files = [
     'assistant/codingAssistant.py',
+    'assistant/modules/code_loader.py'
 ]
 
 
