@@ -4,15 +4,19 @@ import os
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key = api_key)
 scriptPath = os.path.dirname(os.path.abspath(__file__))
-model = "01-mini"
+model_quick_change = "01-mini"
 
 supabaseBasePath = scriptPath + '/../'
 
-files = [
+project_files = [
     'assistant/codingAssistant.py',
     ]
 
-def get_completion(prompt, user_messages=[], assistant_messages=[], model=model):
+def get_completion(prompt, user_messages=None, assistant_messages=None, model="01-mini"):
+    if assistant_messages is None:
+        assistant_messages = []
+    if user_messages is None:
+        user_messages = []
     system = """
     you are a helpful assistant, supporting a software developer in creating an coding assistant script 
     based on the OpenAI API.:
@@ -44,17 +48,17 @@ def get_completion(prompt, user_messages=[], assistant_messages=[], model=model)
     return response.choices[0].message.content
 
 
-prompt = """
+my_prompt = """
 I would like to become a better python developer.
 
 """
 
-user_messages = [
+user_msgs = [
     "How can I improve my Python skills?",
     "What are some advanced Python topics I should learn?"
 ]
 
-assistant_messages = [
+assistant_msgs = [
     "Practice coding daily and work on projects.",
     "Consider learning about asynchronous programming, metaprogramming, and system design."
 ]
@@ -83,12 +87,12 @@ def load_code_files(files) -> str:
             """
     return code
 
-prompt += load_code_files(files)
+my_prompt += load_code_files(project_files)
 
-print(prompt)
+print(my_prompt)
 
 print('----------------\n--- response ---\n----------------\n\n\n')
 
-get_completion(prompt)
+get_completion(my_prompt)
 
-print(get_completion(prompt))
+print(get_completion(my_prompt))
