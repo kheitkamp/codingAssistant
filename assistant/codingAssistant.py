@@ -1,4 +1,5 @@
 from openai import OpenAI
+from modules.code_loader import load_code
 import os
 
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
@@ -7,9 +8,9 @@ projectBasePath = scriptPath + '/../'
 # For the purpose of this example, we are using the "01-mini" model.
 # You can use
 # model_quick_change = "gpt-4o" # for the gpt-4o model
-# model_quick_change = "gpt-4o-mini" # for the gpt-4o-mini model
-# model_quick_change = "01-preview" # for the 01-preview model
-model_quick_change = "01-mini" # for the 01-mini model
+model_quick_change = "gpt-4o-mini" # for the gpt-4o-mini model
+# model_quick_change = "o1-preview" # for the o1-preview model
+# model_quick_change = "o1-mini" # for the o1-mini model
 # model_quick_change = "gpt-4" # for the gpt-4 model
 # model_quick_change = "gpt-4-turbo" # for the gpt-4-turbo model
 # model_quick_change = "gpt-3.5-turbo" # for the gpt-3.5-turbo model
@@ -19,7 +20,7 @@ project_files = [
     'assistant/codingAssistant.py',
 ]
 
-def get_completion(prompt, user_messages=None, assistant_messages=None, model="01-mini"):
+def get_completion(prompt, model="o1-mini", user_messages=None, assistant_messages=None):
     if assistant_messages is None:
         assistant_messages = []
     if user_messages is None:
@@ -54,30 +55,6 @@ def get_completion(prompt, user_messages=None, assistant_messages=None, model="0
     )
     return response.choices[0].message.content
 
-def load_code(files) -> str:
-    """
-    Loads files from the project, to help the assistant's understanding of the project,
-    and returns them as a string.
-    Argument:
-    files: a list of file names, including their path from the repository root.
-    """
-    
-    if not files:
-        return ""
-
-    code = """
-    I will add relevant code as follows. If you are missing any code, please tell me and I will add it.
-    """
-    for file in files:
-        with open(projectBasePath + '/' + file, 'r') as f:
-            code += f"""
-            ```
-            {file}
-            {f.read()}
-            ```
-            """
-    return code
-
 def main():
     my_prompt = """
     I would like to become a better python developer.
@@ -93,7 +70,7 @@ def main():
         "Consider learning about asynchronous programming, metaprogramming, and system design."
     ]
 
-    my_prompt += load_code(project_files)
+    my_prompt += load_code(project_files, projectBasePath)
 
     print(my_prompt)
 
