@@ -1,8 +1,7 @@
 from openai import OpenAI
 import os
 
-api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key = api_key)
+client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 scriptPath = os.path.dirname(os.path.abspath(__file__))
 model_quick_change = "01-mini"
 
@@ -24,10 +23,10 @@ def get_completion(prompt, user_messages=None, assistant_messages=None, model="0
 
     Your task is to generate python code.
     """
-    
-    messages = [
+
+    messages: list[dict[str, str]] = [
         {"role": "system", "content": system}
-        ]
+    ]
     
     if user_messages:
         for user_message in user_messages:
