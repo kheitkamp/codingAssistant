@@ -54,7 +54,7 @@ def get_completion(prompt, user_messages=None, assistant_messages=None, model="0
     )
     return response.choices[0].message.content
 
-def load_code_files(files) -> str:
+def load_code(files) -> str:
     """
     Loads files from the project, to help the assistant's understanding of the project,
     and returns them as a string.
@@ -93,7 +93,7 @@ def main():
         "Consider learning about asynchronous programming, metaprogramming, and system design."
     ]
 
-    my_prompt += load_code_files(project_files)
+    my_prompt += load_code(project_files)
 
     print(my_prompt)
 
