@@ -32,7 +32,7 @@ def get_completion(prompt, model=model_quick_change, user_messages=None, assista
     system = """
     you are a helpful assistant, supporting a software developer in creating an coding assistant script
     based on the OpenAI API.:
-    Your task is to generate python code.
+    Your task is to improve given python code and to generate new python code.
     """
 
     messages = [{"role": "system", "content": system}]
