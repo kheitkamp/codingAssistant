@@ -52,7 +52,15 @@ def get_completion(prompt, model=model_quick_change, user_messages=None, assista
         response = client.chat.completions.create(
             model=model,
             messages=messages,
-            temperature=0,  # this is the degree of randomness of the model's output
+            temperature = 0
+            # change settings for o1-mini and o1-preview models
+            if model == "o1-mini" or model == "o1-preview":
+                # remove system message
+                messages.pop(0)
+                # set temperature to 1
+                temperature = 1
+                
+            temperature=temperature,  # this is the degree of randomness of the model's output
         )
         return response.choices[0].message.content
     except Exception as e:
